@@ -5,7 +5,7 @@ str = "I am an NLPer"
 #n_gramを返す関数
 def n_gram(word,n=2):
     result = []
-    #隣あった文字同士なので全体量-1分回す。
+    #隣あった文字同士なので全体量-n+1分回す。
     for i in range(0,len(word)-n+1):
         #reultにi番目からn個ずつ抜き取り格納する
         result.append(word[i:i+n])
