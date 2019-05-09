@@ -3,6 +3,7 @@
 import collections
 file = 'hightemp.txt'
 with open(file) as open_file:
+    # 1行毎にファイル終端まで全て読む(改行文字も含まれる)
     lines = open_file.readlines()
     # 県だけを取り出してkensに格納する
     kens = [line.split('\t')[0]for line in lines]
