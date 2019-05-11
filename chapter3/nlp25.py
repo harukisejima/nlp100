@@ -81,7 +81,7 @@ def chose_text():
 
 #{{基礎情報と}}で囲まれてる文字を全て抽出
 pattern = re.compile(r'''^\{\{基礎情報.*?$(.*?)^\}\}$''', re.MULTILINE + re.VERBOSE + re.DOTALL)
-print(pattern.findall(chose_text()))
+# print(pattern.findall(chose_text()))
 # ['\n|略名 = イギリス\n|日本語国名 = グレートブリテン及び北アイルランド連合王国\n|公式国名 = {{lang|en|United
 # Kingdom of Great Britain and Northern Ireland}}<ref>英語以外での正式国名:<br/>\n*{{lang|gd|An Rìoghachd 
 # Aonaichte na Breatainn Mhòr agus Eirinn mu Thuath}}（[[スコットランド・ゲール語]]）<br/>\n*{{lang|cy|
@@ -110,3 +110,29 @@ print(pattern.findall(chose_text()))
 # \'\'\'」に変更\n|確立年月日4 = [[1927年]]\n|通貨 = [[スターリング・ポンド|UKポンド]] (&pound;)\n|通貨コード = GBP\n|時間帯 = ±0\n|夏時間
 #  = +1\n|ISO 3166-1 = GB / GBR\n|ccTLD = [[.uk]] / [[.gb]]<ref>使用は.ukに比べ圧倒的少数。
 # </ref>\n|国際電話番号 = 44\n|注記 = <references />\n']
+
+contents = pattern.findall(chose_text())
+
+#抽出結果からさらに抽出
+pattern = re.compile(r'''
+    ^\|         # '|'で始まる行
+    (.+?)       # キャプチャ対象（フィールド名）、任意の1文字以上、非貪欲
+    \s*         # 空白文字0文字以上
+    =
+    \s*         # 空白文字0文字以上
+    (.+?)       # キャプチャ対象（値）、任意の1文字以上、非貪欲
+    (?:         # キャプチャ対象外のグループ開始
+        (?=\n\|)    # 改行+'|'の手前（肯定の先読み）
+        | (?=\n)   # または、改行+終端の手前（肯定の先読み）
+    )           # グループ終了
+    $''', re.MULTILINE + re.VERBOSE + re.DOTALL)
+
+# フィールド名と値の抽出
+fields = pattern.findall(contents[0])
+
+# 辞書にセット
+result = {}
+for field in fields:
+    result[field[0]] = field[1]
+
+print(result)
